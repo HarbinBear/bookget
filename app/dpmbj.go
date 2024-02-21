@@ -18,8 +18,8 @@ const (
 	//故宫名画 minghuaji.dpm.org.cn
 	//来源 https://minghuaji.dpm.org.cn/js/gve.js5
 	// array[3] 是Key, array[5] 是IV
-	MINGHUAJI_KEY = "TRADlRXcAl3uzfuK"
-	MINGHUAJI_IV  = "tDrpStrJPT3h4xrM"
+	MINGHUAJI_KEY = "CiunZGUq47z94Bs8"
+	MINGHUAJI_IV  = "SE6vgQdRdQKutpR1"
 
 	//数字文物 digicol.dpm.org.cn
 	//来源 https://digicol.dpm.org.cn/js/gve.js
@@ -114,6 +114,9 @@ func (p *DpmBj) do(dest string, dziFormat DziFormat) (msg string, err error) {
 		"-H", "Origin:" + referer,
 		"-H", "Referer:" + referer,
 		"-H", "User-Agent:" + config.Conf.UserAgent,
+		// BrownXiong's change
+		"-H", "X-XSRF-TOKEN:" + "b138a2ee-48ba-4312-b20e-4cfca4f219a6",
+		"-H", "Cookie:" + "cd597e398d0138469=M2YyNzMzZGMtYzVkYy00N2MxLTk2ZmItYTVkZGE2MTUzYzQ3;cna=965c0f9fcf678cafdac2535c26834023;XSRF-TOKEN=b138a2ee-48ba-4312-b20e-4cfca4f219a6;szwwHelpTip=true;_abfpc=3d62f972429a440dd656616774dc14705a3b254a_2.0;CNZZDATA1263553162=1821020336-1708444165-https%253A%252F%252Fminghuaji.dpm.org.cn%252F%7C1708483240;isRead=true;UM_distinctid=18dc73525784e4-01f937a56b8242-26001851-384000-18dc7352579ca5",
 	}
 	storePath := p.dt.SavePath
 	ext := "." + dziFormat.Format
@@ -175,22 +178,36 @@ func (p *DpmBj) getDziJson(host string, text []byte) (dziJson string, dzi DziFor
 		return
 	}
 	//fmt.Printf("Split plaintext: %+v\n", m)
-	dzi.Url = m[0]
-	dzi.Format = m[1]
-	dzi.TileSize, _ = strconv.Atoi(m[4])
+	// BrownXiong's change
+	dzi.Format = m[0]
+	dzi.TileSize, _ = strconv.Atoi(m[1])
+	dzi.Url = m[2]
+
 	dzi.Overlap, _ = strconv.Atoi(m[5])
-	if strings.Contains(m[2], ".") {
-		w, _ := strconv.ParseFloat(m[2], 32)
+
+	// BrownXiong comment temporarily
+
+	//dzi.Url = m[0]
+	//dzi.Format = m[1]
+	//dzi.TileSize, _ = strconv.Atoi(m[4])
+	//dzi.Overlap, _ = strconv.Atoi(m[5])
+
+	if strings.Contains(m[3], ".") {
+		w, _ := strconv.ParseFloat(m[3], 32)
 		dzi.Size.Width = int(w)
 	} else {
-		dzi.Size.Width, _ = strconv.Atoi(m[2])
+		dzi.Size.Width, _ = strconv.Atoi(m[3])
 	}
-	if strings.Contains(m[3], ".") {
-		h, _ := strconv.ParseFloat(m[3], 32)
+	if strings.Contains(m[4], ".") {
+		h, _ := strconv.ParseFloat(m[4], 32)
 		dzi.Size.Height = int(h)
 	} else {
-		dzi.Size.Height, _ = strconv.Atoi(m[3])
+		dzi.Size.Height, _ = strconv.Atoi(m[4])
 	}
 	dziJson = fmt.Sprintf(template, dzi.Url, dzi.Overlap, dzi.TileSize, dzi.Format, dzi.Size.Width, dzi.Size.Height)
 	return
 }
+
+/* BrownXiong's comment
+   https://minghuaji.dpm.org.cn/paint/appreciate?id=6fbbce8d417e4ba09fa67f8be1a23458
+*/
