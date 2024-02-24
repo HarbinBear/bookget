@@ -237,13 +237,14 @@ func (p *CafaEdu) doNormal(imgUrls []string) bool {
 			continue
 		}
 		imgUrl := uri
-		fmt.Println()
-		log.Printf("Get %d/%d  %s\n", i+1, size, imgUrl)
 		wg.Add(1)
 		q.Go(func() {
 			defer wg.Done()
+
 			ctx := context.Background()
 			opts := gohttp.Options{
+				Timeout:     300,
+				Retry:       2,
 				DestFile:    dest,
 				Overwrite:   false,
 				Concurrency: 1,
@@ -255,9 +256,15 @@ func (p *CafaEdu) doNormal(imgUrls []string) bool {
 			}
 			gohttp.FastGet(ctx, imgUrl, opts)
 			fmt.Println()
+			log.Printf("Get %d/%d  %s\n", i+1, size, imgUrl)
+			//fmt.Println()
 		})
 	}
 	wg.Wait()
 	fmt.Println()
 	return true
 }
+
+/*
+https://dlibgate.cafa.edu.cn/ebook/item/6990---19-19?offset=1
+*/
