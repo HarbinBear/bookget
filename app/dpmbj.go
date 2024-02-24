@@ -178,19 +178,22 @@ func (p *DpmBj) getDziJson(host string, text []byte) (dziJson string, dzi DziFor
 		return
 	}
 	//fmt.Printf("Split plaintext: %+v\n", m)
-	// BrownXiong's change
-	dzi.Format = m[0]
-	dzi.TileSize, _ = strconv.Atoi(m[1])
-	dzi.Url = m[2]
 
-	dzi.Overlap, _ = strconv.Atoi(m[5])
+	// BrownXiong's change
+	{
+		dzi.Format = m[0]
+		dzi.TileSize, _ = strconv.Atoi(m[1])
+		dzi.Url = m[2]
+		dzi.Overlap, _ = strconv.Atoi(m[5])
+	}
 
 	// BrownXiong comment temporarily
-
-	//dzi.Url = m[0]
-	//dzi.Format = m[1]
-	//dzi.TileSize, _ = strconv.Atoi(m[4])
-	//dzi.Overlap, _ = strconv.Atoi(m[5])
+	{
+		//dzi.Url = m[0]
+		//dzi.Format = m[1]
+		//dzi.TileSize, _ = strconv.Atoi(m[4])
+		//dzi.Overlap, _ = strconv.Atoi(m[5])
+	}
 
 	if strings.Contains(m[3], ".") {
 		w, _ := strconv.ParseFloat(m[3], 32)
