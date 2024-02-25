@@ -22,7 +22,10 @@ jobs:
         go-version: 1.21
 
     - name: Build
-      run: go build -v ./...
-#
-#    - name: Test
-#      run: go test -v ./...
+      run: go build -v -o bookget_a .
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: executable-file
+        path: bookget_a # 或 myapplication.exe，根据您的需要和目标平台
+
