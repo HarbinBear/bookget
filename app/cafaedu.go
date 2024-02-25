@@ -243,7 +243,7 @@ func (p *CafaEdu) doNormal(imgUrls []string) bool {
 
 			ctx := context.Background()
 			opts := gohttp.Options{
-				Timeout:     300,
+				Timeout:     float32(config.Conf.Timeout),
 				Retry:       2,
 				DestFile:    dest,
 				Overwrite:   false,

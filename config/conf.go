@@ -33,6 +33,7 @@ type Input struct {
 	UseDziRs      bool   //启用DezoomifyRs下载IIIF
 	FileExt       string //指定下载的扩展名
 	Threads       uint
+	Timeout       float64
 	Retry         int  //重试次数
 	Bookmark      bool //只下載書簽目錄（浙江寧波天一閣）
 	Help          bool
@@ -68,6 +69,7 @@ func Init(ctx context.Context) bool {
 	flag.StringVar(&Conf.CookieFile, "c", iniConf.CookieFile, "指定cookie.txt文件路径")
 	flag.StringVar(&Conf.FileExt, "ext", iniConf.FileExt, "指定文件扩展名[.jpg|.tif|.png]等")
 	flag.UintVar(&Conf.Threads, "n", iniConf.Threads, "最大并发连接数")
+	flag.Float64Var(&Conf.Timeout, "timeout", iniConf.Timeout, "最大并发连接数")
 	flag.UintVar(&Conf.Speed, "speed", iniConf.Speed, "下载限速 N 秒/任务，cuhk推荐5-60")
 	flag.IntVar(&Conf.Retry, "r", iniConf.Retry, "下载重试次数")
 	flag.IntVar(&Conf.AutoDetect, "a", iniConf.AutoDetect, "自动检测下载URL。可选值[0|1|2]，;0=默认;\n1=通用批量下载（类似IDM、迅雷）;\n2= IIIF manifest.json 自动检测下载图片")
@@ -141,6 +143,7 @@ func initINI() (io Input, err error) {
 		UseDziRs:      false,
 		FileExt:       ".jpg",
 		Threads:       c,
+		Timeout:       3000,
 		Retry:         3,
 		Bookmark:      false,
 		Help:          false,
@@ -176,6 +179,13 @@ func initINI() (io Input, err error) {
 	if io.Threads == 0 {
 		io.Threads = c
 	}
+
+	io.Timeout = secDown.Key("timeout").MustFloat64()
+	// 超时不可以短于10秒
+	if io.Timeout < 10 {
+		io.Timeout = 3000
+	}
+
 	io.Speed = secDown.Key("speed").MustUint(c)
 
 	secCus := cfg.Section("custom")
