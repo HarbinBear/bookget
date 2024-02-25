@@ -118,7 +118,7 @@ func (p *CafaEdu) getVolumes(sUrl string, jar *cookiejar.Jar) (volumes []string,
 	if err != nil {
 		return nil, err
 	}
-	jsonUrl := fmt.Sprintf("https://%s/api/viewer/lgiiif?url=/srv/www/limbgallery/medias/%s/&max=%d", p.dt.UrlParsed.Host, iiifId, 1000)
+	jsonUrl := fmt.Sprintf("https://%s/api/viewer/lgiiif?url=/srv/www/limbgallery/medias/%s/&max=%d", p.dt.UrlParsed.Host, iiifId, 10000)
 	volumes = append(volumes, jsonUrl)
 	return volumes, err
 }
