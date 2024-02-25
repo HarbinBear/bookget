@@ -26,6 +26,6 @@ jobs:
 
     - uses: actions/upload-artifact@v3
       with:
-        name: executable-file
-        path: bookget_a # 或 myapplication.exe，根据您的需要和目标平台
+        name: actions-exe-file
+        path: bookget_a.exe
 
