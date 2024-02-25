@@ -28,7 +28,7 @@ jobs:
     - uses: actions/upload-artifact@v3
       with:
         name: actions-exe-file
-        path:
+        path: |
           bookget.exe
           dezoomify-rs.exe
           config.ini
